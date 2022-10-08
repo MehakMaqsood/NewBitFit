@@ -29,14 +29,6 @@ class AddFoodActivity : AppCompatActivity() {
                 replyIntent.putExtra(EXTRA_CALORIES,calories)
                 setResult(Activity.RESULT_OK, replyIntent)
 
-            /*    val extras = Bundle()
-                extras.putString("EXTRA_FOOD", food)
-                extras.putString("EXTRA_CALORIES", calories)
-                replyIntent.putExtra(EXTRA_REPLY, extras)
-
-                setResult(Activity.RESULT_OK, replyIntent)
-
-             */
             }
             finish()
         }

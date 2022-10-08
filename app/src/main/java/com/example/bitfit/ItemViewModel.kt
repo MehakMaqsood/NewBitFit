@@ -3,6 +3,7 @@ package com.example.bitfit
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations.map
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -19,11 +20,13 @@ class ItemViewModel(application: Application): AndroidViewModel(application) {
     private val repository: ItemRepository
     val allItems: LiveData<List<FoodItem>>
 
+
     init {
         val HealthDao = AppDatabase.getDatabase(application, scope).healthDao()
         repository = ItemRepository(HealthDao)
         allItems = repository.allItems
     }
+
 
     fun insert(food: FoodItem) = scope.launch(Dispatchers.IO) {
         repository.insert(food)

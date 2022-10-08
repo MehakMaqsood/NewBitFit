@@ -25,5 +25,16 @@ interface HealthDAO {
     @Delete
     fun deleteItem(food: FoodItem)
 
+    //  Get the highest value
+    @Query("SELECT MAX(Calories) FROM HealthData")
+    fun getHighestCal() : Flow<Int>
+
+    // Get the lowest vlue
+   // @Query("SELECT MIN(Calories) FROM HealthData")
+    //fun getLowest()
+
+    // Get the average value
+    //@Query("SELECT AVG(Calories) FROM HealthData")
+    //fun getAvg()
 
 }

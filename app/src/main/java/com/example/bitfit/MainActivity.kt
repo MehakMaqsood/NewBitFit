@@ -17,60 +17,48 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val newFoodActivityRequestCode = 1
-    private lateinit var itemViewModel: ItemViewModel
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.menu)
 
-        val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rvFood)
-        val adapter = FoodAdapter(this)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        val fragmentManager: FragmentManager = supportFragmentManager
 
-        itemViewModel = ViewModelProviders.of(this).get(ItemViewModel::class.java)
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnItemSelectedListener {
+            item ->
+            var fragmentToShow: Fragment? = null
 
-        itemViewModel.allItems.observe(this, Observer { food ->
-            food?.let { adapter.setFood(it) }
-        })
-
-        findViewById<Button>(R.id.btnAdd).setOnClickListener{
-            val intent = Intent(this, AddFoodActivity::class.java)
-            startActivityForResult(intent, newFoodActivityRequestCode)
-        }
-
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intentData)
-
-        if (requestCode == newFoodActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            intentData?.let { data ->
-                // Add new food name into database
-                val food = FoodItem(0,data.getStringExtra(AddFoodActivity.EXTRA_FOOD), data.getStringExtra(AddFoodActivity.EXTRA_CALORIES)?.toInt())
-                itemViewModel.insert(food)
-                // Add new calories into database
+            when(item.itemId){
+                R.id.action_food -> {
+                    // Navigate to list of food view
+                    fragmentToShow = FoodFragment()
+                }
+                R.id.action_dashboard -> {
+                    // Navigate to dashboard
+                    fragmentToShow = DashboardFragment()
+                }
             }
-        } else {
-            Toast.makeText(
-                applicationContext,
-                "Not saved",
-                Toast.LENGTH_LONG
-            ).show()
+            if (fragmentToShow != null){
+                fragmentManager.beginTransaction().replace(R.id.flContainer,fragmentToShow).commit()
+            }
+
+            true
         }
+        // Set default selection
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).selectedItemId = R.id.action_food
+
     }
-
-
-
 }
