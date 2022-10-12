@@ -7,6 +7,9 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AddFoodActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +20,7 @@ class AddFoodActivity : AppCompatActivity() {
         button.setOnClickListener {
             val replyIntent = Intent()
             if (TextUtils.isEmpty(findViewById<EditText>(R.id.etAddFood).text)
-               /* && TextUtils.isEmpty(findViewById<EditText>(R.id.etAddCal).text) */) {
+                && TextUtils.isEmpty(findViewById<EditText>(R.id.etAddCal).text) ) {
 
                 setResult(Activity.RESULT_CANCELED, replyIntent)
 
@@ -29,7 +32,10 @@ class AddFoodActivity : AppCompatActivity() {
                 replyIntent.putExtra(EXTRA_CALORIES,calories)
                 setResult(Activity.RESULT_OK, replyIntent)
 
+
             }
+
+
             finish()
         }
     }

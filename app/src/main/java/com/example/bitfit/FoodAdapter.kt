@@ -10,36 +10,35 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
-class FoodAdapter internal constructor(context: Context) : RecyclerView.Adapter<FoodAdapter.FoodViewHolder>() {
 
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var food = emptyList<FoodItem>() // Cached copy of words
+const val ARTICLE_EXTRA = "FOOD_EXTRA"
+private const val TAG = "FoodAdapter"
 
-    inner class FoodViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val foodItemView: TextView = itemView.findViewById(R.id.tvFoodItem)
-        val numCalView: TextView = itemView.findViewById(R.id.tvNumCal)
+class FoodAdapter(private val context: Context, private val fooditems: List<DisplayItem>) :
+    RecyclerView.Adapter<FoodAdapter.ViewHolder>(){
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(context).inflate(R.layout.food_item, parent, false)
+        return ViewHolder(view)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodViewHolder {
-        val itemView = inflater.inflate(R.layout.food_item, parent, false)
-        return FoodViewHolder(itemView)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val fooditem = fooditems[position]
+        holder.bind(fooditem)
     }
 
-    override fun onBindViewHolder(holder: FoodViewHolder, position: Int) {
-        val current = food[position]
-        holder.foodItemView.text = current.foodname
-        holder.numCalView.text = current.calories.toString()
+    override fun getItemCount() = fooditems.size
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+
+        private val foodnameView = itemView.findViewById<TextView>(R.id.tvFoodItem)
+        private val foodcalView = itemView.findViewById<TextView>(R.id.tvNumCal)
+
+        // helper method to help set up the onBindViewHolder method
+        fun bind(fooditem: DisplayItem) {
+            foodnameView.text = fooditem.foodName
+            foodcalView.text = fooditem.foodCal.toString()
+        }
     }
 
-    internal fun setFood(food: List<FoodItem>) {
-        this.food = food
-        notifyDataSetChanged()
-    }
-
-    fun getWordAtPosition(position: Int): FoodItem {
-        return food[position]
-    }
-
-
-    override fun getItemCount() = food.size
 }

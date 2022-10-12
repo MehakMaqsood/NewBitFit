@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.Flow
 interface HealthDAO {
     // Query to get all data from the table HealthData
     @Query("SELECT * FROM HealthData")
-    fun getAll(): LiveData<List<FoodItem>>
+    fun getAll(): Flow<List<FoodItem>>
 
     // Insert new item to the HealthData table
     @Insert
-    fun insert(food: FoodItem)
+    fun insertAll(vararg food:FoodItem)
 
     // Delete all data from HealthTable
     @Query("DELETE FROM HealthData")
